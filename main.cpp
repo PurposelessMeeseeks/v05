@@ -2,7 +2,7 @@
 #include <tchar.h>
 #include <list>
 #include "nwpwin.h"
-#define AREA 10
+#define AREA 1
 
 class MainWindow : public Window
 {
@@ -19,14 +19,17 @@ protected:
 		}
 	}
 
-	void OnLButtonDown(POINT p) 
+	void OnLButtonDown(POINT p)
 	{
+		POINT prev;
+		if (!points.empty())
+		{
+			prev = points.back();
+		}
 		points.push_back(p);
 		if (points.size() > 1)
-		{
-			std::list<POINT>::const_iterator it;
-			it =  --(--(points.end()));
-			RECT rc = { min(it->x,p.x)-AREA, min(it->y, p.y)-AREA, max(it->x,p.x)+AREA, max(it->y, p.y)+AREA };
+		{	
+			RECT rc = { min(prev.x,p.x)-AREA, min(prev.y, p.y)-AREA, max(prev.x,p.x)+AREA, max(prev.y, p.y)+AREA };
 			InvalidateRect(*this, &rc, TRUE);
 		}
 	}
